@@ -63,7 +63,7 @@ router.patch("/updateSharedCordinates", async (req, res) => {
 });
 
 //Get all users which is within 500m according to the shared location
-router.get("/getUsers", async (req, res) => {
+router.post("/getUsers", async (req, res) => {
   const { userId, userLat, userLong } = req.body;
   try {
     const existingData = await UserData.findOne({ userId });
