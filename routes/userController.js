@@ -157,7 +157,7 @@ router.post("/getUsers", async (req, res) => {
 });
 
 //Get all shared location
-router.get("/getLocation", async (req, res) => {
+router.post("/getLocation", async (req, res) => {
   const { requestID } = req.body;
 
   try {
