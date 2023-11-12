@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const locationSchema = new mongoose.Schema({
   sharedUserId: { type: String, required: true, unque: true },
+  sharedUsername: { type: String, required: true, unque: true },
   sharedLat: { type: String, required: true },
   sharedLong: { type: String, required: true },
   locationStartTime: {
