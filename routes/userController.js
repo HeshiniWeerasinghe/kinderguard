@@ -5,7 +5,7 @@ const SharedLocation = require("../model/sharedLocationModel");
 
 //Save User Data
 router.post("/saveUser", async (req, res) => {
-  const { userId,userUsername, userLat, userLong } = req.body;
+  const { userId, userUsername, userLat, userLong } = req.body;
   try {
     const existingData = await UserData.findOne({ userId });
 
@@ -33,7 +33,7 @@ router.post("/saveUser", async (req, res) => {
 
 //Update log&lat  shared by user (Current location)
 router.patch("/updateSharedCordinates", async (req, res) => {
-  const { userId,userUsername, userLat, userLong } = req.body;
+  const { userId, userUsername, userLat, userLong } = req.body;
   try {
     const existingData = await UserData.findOne({ userId });
 
@@ -52,7 +52,7 @@ router.patch("/updateSharedCordinates", async (req, res) => {
         message: "sharedLat and sharedLong must not be null or undefined",
       });
     }
-    existingData.userUsername=userUsername;
+    existingData.userUsername = userUsername;
     existingData.userLat = userLat;
     existingData.userLong = userLong;
     await existingData.save();
@@ -65,7 +65,7 @@ router.patch("/updateSharedCordinates", async (req, res) => {
 
 //Get all users which is within 500m according to the shared location
 router.post("/getUsers", async (req, res) => {
-  const { userId,userUsername, userLat, userLong } = req.body;
+  const { userId, userUsername, userLat, userLong } = req.body;
   try {
     const existingData = await UserData.findOne({ userId });
     const usersIdsWithinRadius = [];
@@ -115,6 +115,7 @@ router.post("/getUsers", async (req, res) => {
       usersIdsWithinRadius.push(user.userId);
       return {
         userId: user.userId,
+        username: user.userUsername,
         userLat: userLat,
         userLong: userLong,
         distance: Math.round(distance),
@@ -126,7 +127,7 @@ router.post("/getUsers", async (req, res) => {
     if (!existingUser) {
       const sharedLocationData = new SharedLocation({
         sharedUserId: userId,
-        sharedUsername:userUsername,
+        sharedUsername: userUsername,
         sharedLat: userLat,
         sharedLong: userLong,
         locationStartTime: new Date(),
@@ -137,7 +138,7 @@ router.post("/getUsers", async (req, res) => {
       await SharedLocation.findOneAndUpdate(
         { sharedUserId: userId },
         {
-          sharedUsername:userUsername,
+          sharedUsername: userUsername,
           sharedLat: userLat,
           sharedLong: userLong,
           usersWithinRadius: userIdsAndDistances.map((data) => data.userId),
@@ -148,7 +149,7 @@ router.post("/getUsers", async (req, res) => {
 
     userIdsAndDistances.sort((a, b) => a.distance - b.distance);
     const responseData = {
-      requestLocation: { userId,userUsername },
+      requestLocation: { userId },
       usersWithinRadius: userIdsAndDistances,
     };
 
@@ -180,7 +181,7 @@ router.post("/getLocation", async (req, res) => {
         $project: {
           _id: 0,
           sharedUserId: 1,
-          sharedUsername:1,
+          sharedUsername: 1,
           sharedLat: 1,
           sharedLong: 1,
           locationStartTime: 1,
@@ -197,7 +198,7 @@ router.post("/getLocation", async (req, res) => {
 
 //Update if miss leading
 router.patch("/updateIsActive", async (req, res) => {
-  const { sharedUserId,sharedUsername, isActive } = req.body;
+  const { sharedUserId, sharedUsername, isActive } = req.body;
 
   try {
     const existingData = await SharedLocation.findOne({
@@ -208,7 +209,7 @@ router.patch("/updateIsActive", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     existingData.isActive = isActive;
-    existingData.sharedUsername=sharedUsername;
+    existingData.sharedUsername = sharedUsername;
     await existingData.save();
 
     res.status(200).json({ message: "Miss leading successfully reported" });
