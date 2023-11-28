@@ -11,7 +11,7 @@ const app = express();
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -119,5 +119,5 @@ io.on("connection", (socket) => {
 });
 
 http.listen(port, () => {
-  console.log(`Server is running on portt ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
