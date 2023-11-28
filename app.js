@@ -3,13 +3,14 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const mDbConfig = require("./lib/db");
 const UserDataRoutes = require("./routes/userController");
-
+const app = express();
+const http = require("http");
 const UserData = require("./model/userModel");
 const SharedLocation = require("./model/sharedLocationModel");
 
-const app = express();
-const http = require("http").Server(app);
-const io = require("socket.io")(http);
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
 const port = process.env.PORT || 3001;
 
@@ -26,8 +27,8 @@ app.use("/api", UserDataRoutes);
 io.on("connection", (socket) => {
   console.log("Client connected");
 
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
+  socket.on("disconnect", (error) => {
+    console.log("Client disconnected", error);
   });
 
   socket.on("getLocation", async (data) => {
@@ -118,6 +119,6 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on portt ${port}`);
 });
