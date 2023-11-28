@@ -9,7 +9,9 @@ const SharedLocation = require("./model/sharedLocationModel");
 
 const app = express();
 const http = require("http").Server(app);
-const io = require("socket.io")(http);
+const io = require('socket.io')(http, {
+  pingTimeout: 60000, // Extend the timeout to 60 seconds (in milliseconds)
+});
 
 const port = process.env.PORT || 3000;
 
