@@ -26,8 +26,9 @@ app.use("/api", UserDataRoutes);
 io.on("connection", (socket) => {
   console.log("Client connected");
 
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
+  socket.on("disconnect", (error) => {
+    
+    console.log("Client disconnected  :",error);
   });
 
   socket.on("getLocation", async (data) => {
