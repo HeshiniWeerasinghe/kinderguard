@@ -32,7 +32,7 @@ router.post("/saveUser", async (req, res) => {
 });
 
 //Update log&lat  shared by user (Current location)
-router.patch("/updateSharedCordinates", async (req, res) => {
+router.patch("/updateSharedCordinatesOld", async (req, res) => {
   const { userId, userUsername, userLat, userLong } = req.body;
   try {
     const existingData = await UserData.findOne({ userId });
@@ -161,7 +161,7 @@ router.post("/getUsers", async (req, res) => {
 });
 
 //Get all shared location
-router.post("/getLocation", async (req, res) => {
+router.post("/getLocationOld", async (req, res) => {
   const { requestID } = req.body;
 
   try {
