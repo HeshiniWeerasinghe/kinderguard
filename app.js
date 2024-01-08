@@ -39,9 +39,9 @@ io.on("connection", (socket) => {
         {
           $match: {
             usersWithinRadius: data.requestID,
-            // locationStartTime: {
-            //   $gte: new Date(now - 5 * 60 * 1000), // 5 min
-            // },
+            locationStartTime: {
+              $gte: new Date(now - 20 * 60 * 1000), // 20 min
+            },
             isActive: true,
             sharedUserId: { $ne: data.requestID },
           },
@@ -49,6 +49,7 @@ io.on("connection", (socket) => {
         {
           $project: {
             _id: 0,
+            sharedId: 1,
             sharedUserId: 1,
             sharedUsername: 1,
             sharedLat: 1,
