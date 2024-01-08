@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const UserData = require("../model/userModel");
 const SharedLocation = require("../model/sharedLocationModel");
+const crypto = require("crypto");
 
 //Save User Data
 router.post("/saveUser", async (req, res) => {
@@ -125,7 +126,10 @@ router.post("/getUsers", async (req, res) => {
     // Save data to the database
     const existingUser = await SharedLocation.findOne({ userId });
     if (!existingUser) {
+      const sharedId = crypto.randomBytes(16).toString("hex");
+
       const sharedLocationData = new SharedLocation({
+        sharedId: sharedId,
         sharedUserId: userId,
         sharedUsername: userUsername,
         sharedLat: userLat,
@@ -198,18 +202,17 @@ router.post("/getLocationOld", async (req, res) => {
 
 //Update if miss leading
 router.patch("/updateIsActive", async (req, res) => {
-  const { sharedUserId, sharedUsername, isActive } = req.body;
+  const { sharedId, isActive } = req.body;
 
   try {
     const existingData = await SharedLocation.findOne({
-      sharedUserId: sharedUserId,
+      sharedId: sharedId,
     });
 
     if (!existingData) {
       return res.status(404).json({ message: "User not found" });
     }
     existingData.isActive = isActive;
-    existingData.sharedUsername = sharedUsername;
     await existingData.save();
 
     res.status(200).json({ message: "Miss leading successfully reported" });
