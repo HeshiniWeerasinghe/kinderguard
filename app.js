@@ -60,6 +60,7 @@ io.on("connection", (socket) => {
       ]);
 
       socket.emit("getLocation", result);
+      
     } catch (error) {
       console.error("An error occurred:", error);
       socket.emit("returnMessage", {
@@ -109,6 +110,7 @@ io.on("connection", (socket) => {
       existingData.userLong = userLong;
       await existingData.save();
       socket.emit("sendLocation", sendLocation);
+      console.log("Data emit sendLocation by :",data);
     } catch (error) {
       console.error("An error occurred:", error);
       socket.emit("sendLocation", {
